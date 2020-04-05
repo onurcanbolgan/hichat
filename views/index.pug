@@ -2,7 +2,6 @@ extends layout
 
 append stylesheets
   link(rel='stylesheet', href='/stylesheets/index.css')
-  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css')
 
 block content
   div(ng-controller="indexController")
@@ -11,7 +10,7 @@ block content
         .modal__header
           h2 Welcome, please login.
         .modal__footer
-          a(href='#')
+          a(href='/auth/google')
             i.fab.fa-google-plus-g(aria-hidden='true')
             |  Login with Google+
 
