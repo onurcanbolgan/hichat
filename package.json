@@ -7,10 +7,13 @@
     "start:dev": "nodemon ./bin/www"
   },
   "dependencies": {
+    "acorn": "^7.1.1",
+    "bower": "^1.8.8",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
+    "kind-of": "^6.0.3",
     "morgan": "~1.9.1",
     "pug": "^2.0.4"
   },
