@@ -102,7 +102,7 @@ ul,li{
     background-position: top 12px left 14px;
     border-radius: 50%;
 }
-.container .left .people {
+.tabArea{
     margin-left: -1px;
     border-right: 1px solid var(--light);
     border-left: 1px solid var(--light);
@@ -110,6 +110,7 @@ ul,li{
     height: calc(76% + 1px);
     overflow:scroll;
 }
+
 .container .left .people .person {
     position: relative;
     width: 100%;
@@ -319,6 +320,7 @@ ul,li{
     background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/send.png");
     background-repeat: no-repeat;
     background-position: center;
+    cursor: pointer;
 }
 .container .right .bubble {
     font-size: 16px;
@@ -399,6 +401,7 @@ ul,li{
 .tab li{
     width: 50%;
     float: left;
+    cursor: pointer;
 }
 .tab li a{
     height:40px;
