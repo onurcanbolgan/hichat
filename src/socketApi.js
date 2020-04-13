@@ -35,12 +35,13 @@ io.on('connection', socket => {
     Users.list(users => {
         io.emit('onlineList', users);
     });
-
-    Rooms.list(rooms => {
-        io.emit('roomList', rooms);
-    });
+    //
+    // Rooms.list(rooms => {
+    //     io.emit('roomList', rooms);
+    // },socket.request.user._id);
 
     socket.on('newMessage', data => {
+        console.log(data)
         const messageData = {
             ...data,
             userId: socket.request.user._id,
@@ -51,15 +52,20 @@ io.on('connection', socket => {
         socket.broadcast.emit('recieveMessage', messageData);
     });
 
-    socket.on('newRoom', roomName => {
-        Rooms.upsert(roomName);
-        Rooms.list(rooms => {
-            io.emit('roomList', rooms);
-        });
+    socket.on('newRoom', (roomName,myId) => {
+        const userData = {
+            userId: socket.request.user._id,
+            name: socket.request.user.name,
+            surname: socket.request.user.surname,
+            profilePhotoUrl: socket.request.user.profilePhotoUrl
+        };
+        Rooms.upsert(roomName,userData);
+        socket.broadcast.emit('recieveRoom', roomName,myId);
+
     });
 
     socket.on('disconnect', () => {
-        Users.remove(socket.request.user.googleId);
+        Users.remove(socket.request.user._id);
 
         Users.list(users => {
             io.emit('onlineList', users);

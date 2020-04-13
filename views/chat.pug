@@ -18,19 +18,18 @@ block content
             .tab-left(ng-show="activeTab === 1")
               ul.people
                 li.person(
-                  ng-repeat="room in roomList",
+                  ng-repeat="room in rooms[user._id]",
                   ng-click="switchRoom(room)"
                   )
+                  img(ng-src="{{ room.profilePhotoUrl }}")
                   span.name {{ room.name }}
-                  span.preview I was wondering...
+                  span.preview &nbsp;
             .tab-right(ng-show="activeTab === 2")
               ul.people
                 li.person(ng-repeat="user in onlineList")
                   img(ng-src="{{ user.meta.profilePhotoUrl }}")
-                  span.name {{ user.meta.name }}
+                  span.name(ng-click="newRoom(user)") {{ user.meta.name }}
                   span.preview &nbsp;
-          .bottom
-            button(ng-click="newRoom()") New Room
         .right(ng-show="chatClicked")
           .top
             span
@@ -54,4 +53,5 @@ append javascripts
   script(src="/socket.io/socket.io.js")
   script(src="/javascripts/services/chatFactory.js")
   script(src="/javascripts/services/userFactory.js")
+  script(src="/javascripts/services/roomFactory.js")
   script(src="/javascripts/controller/chatController.js")

@@ -1,36 +1,57 @@
 const redisClient = require('../redisClient');
 const shortid = require('shortid');
+const _ = require('lodash');
+
 function Rooms() {
     this.client = redisClient.getClient();
 }
 module.exports = new Rooms();
 
-Rooms.prototype.upsert = function (name) {
-    const newId = shortid.generate();
-  this.client.hset(
-      'rooms',
-      '@Room:' + newId,
-      JSON.stringify({
-          id: '@Room:' + newId,
-          name,
-          when: Date.now()
-      }),
-      err => {
+Rooms.prototype.upsert = function (data,userData) {
+    const randomId = shortid.generate();
+    this.client.hset(
+        "rooms:" + userData.userId,
+            data._id,
+            JSON.stringify({
+                id: data._id,
+                name: data.name,
+                surname: data.surname,
+                profilePhotoUrl: data.profilePhotoUrl,
+                when: Date.now()
+            }),
+        err => {
           if (err)
               console.log(err);
       }
   );
+
+    this.client.hset(
+        "rooms:" + data._id,
+        userData.userId,
+        JSON.stringify({
+            id: userData.userId,
+            name: userData.name,
+            surname: userData.surname,
+            profilePhotoUrl: userData.profilePhotoUrl,
+            when: Date.now()
+        }),
+        err => {
+            if (err)
+                console.log(err);
+        }
+    );
 };
 
-Rooms.prototype.list = function (callback) {
+
+Rooms.prototype.list = function (myId, callback) {
     let active = [];
-    this.client.hgetall('rooms', (err, rooms) => {
+    this.client.hgetall('rooms:'+ myId, (err, rooms) => {
         if (err){
             return callback([]);
         }
         for(let room in rooms){
             active.push(JSON.parse(rooms[room]));
         }
-        return callback(active);
+        return callback(_.orderBy(active, 'when','asc'));
     });
 };
