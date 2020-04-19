@@ -8,38 +8,40 @@ function Rooms() {
 module.exports = new Rooms();
 
 Rooms.prototype.upsert = function (data,userData) {
-    const randomId = shortid.generate();
-    this.client.hset(
-        "rooms:" + userData.userId,
-            data._id,
-            JSON.stringify({
-                id: data._id,
-                name: data.name,
-                surname: data.surname,
-                profilePhotoUrl: data.profilePhotoUrl,
-                when: Date.now()
-            }),
-        err => {
-          if (err)
-              console.log(err);
-      }
-  );
-
-    this.client.hset(
-        "rooms:" + data._id,
-        userData.userId,
-        JSON.stringify({
-            id: userData.userId,
-            name: userData.name,
-            surname: userData.surname,
-            profilePhotoUrl: userData.profilePhotoUrl,
-            when: Date.now()
-        }),
-        err => {
-            if (err)
-                console.log(err);
+    if (!userData.userId || userData.userId != undefined){
+        if (!data._id || data._id != undefined){
+            this.client.hset(
+                "rooms:" + userData.userId,
+                data._id,
+                JSON.stringify({
+                    id: data._id,
+                    name: data.name,
+                    surname: data.surname,
+                    profilePhotoUrl: data.profilePhotoUrl,
+                    when: Date.now()
+                }),
+                err => {
+                    if (err)
+                        console.log(err);
+                }
+            );
+            this.client.hset(
+                "rooms:" + data._id,
+                userData.userId,
+                JSON.stringify({
+                    id: userData.userId,
+                    name: userData.name,
+                    surname: userData.surname,
+                    profilePhotoUrl: userData.profilePhotoUrl,
+                    when: Date.now()
+                }),
+                err => {
+                    if (err)
+                        console.log(err);
+                }
+            );
         }
-    );
+    }
 };
 
 

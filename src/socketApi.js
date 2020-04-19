@@ -41,7 +41,6 @@ io.on('connection', socket => {
     // },socket.request.user._id);
 
     socket.on('newMessage', data => {
-        console.log(data)
         const messageData = {
             ...data,
             userId: socket.request.user._id,
@@ -60,7 +59,7 @@ io.on('connection', socket => {
             profilePhotoUrl: socket.request.user.profilePhotoUrl
         };
         Rooms.upsert(roomName,userData);
-        socket.broadcast.emit('recieveRoom', roomName,myId);
+        socket.broadcast.emit('recieveRoom', roomName,userData);
 
     });
 

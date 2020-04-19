@@ -40,23 +40,23 @@ app.controller('chatController', ['$scope','chatFactory','userFactory','roomFact
 
 
     socket.on('recieveMessage', data => {
-        console.log(data)
-        $scope.messages[data.roomId].push({
+        $scope.messages[data.userId].push({
             userId: data.userId,
             username: data.username,
             surname: data.surname,
-            message: data.message,
-            ...data
+            message: data.message
         });
-        $scope.$apply();
     });
 
-    socket.on('recieveRoom', (data,myId) => {
-        $scope.rooms[myId].push({
-            userId: data.userId,
-            name: data.name,
-            surname: data.surname,
-            profilePhotoUrl: data.profilePhotoUrl
+    socket.on('recieveRoom', (data,userData) => {
+        $scope.rooms[data._id].push({
+            userId: userData.userId,
+            name: userData.name,
+            surname: userData.surname,
+            profilePhotoUrl: userData.profilePhotoUrl
+        });
+        roomFactory.getRooms().then(rooms => {
+            $scope.rooms[$scope.user._id] = rooms;
         });
         $scope.$apply();
     });
@@ -79,7 +79,7 @@ app.controller('chatController', ['$scope','chatFactory','userFactory','roomFact
         if ($scope.message.trim() !== ''){
             socket.emit('newMessage', {
                 message: $scope.message,
-                roomId: $scope.roomId
+                roomId: $scope.roomId,
             });
 
             $scope.messages[$scope.roomId].push({
@@ -103,7 +103,10 @@ app.controller('chatController', ['$scope','chatFactory','userFactory','roomFact
     $scope.newRoom = (data) => {
         let myId = $scope.user._id;
         if (data.meta._id != $scope.user._id && data != null){
-                socket.emit('newRoom', data.meta,myId);
+            socket.emit('newRoom', data.meta,myId);
+            roomFactory.getRooms().then(rooms => {
+                $scope.rooms[$scope.user._id] = rooms;
+            });
         }
     };
 
