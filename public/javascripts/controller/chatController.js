@@ -46,6 +46,7 @@ app.controller('chatController', ['$scope','chatFactory','userFactory','roomFact
             surname: data.surname,
             message: data.message
         });
+        $scope.$apply();
     });
 
     socket.on('recieveRoom', (data,userData) => {
